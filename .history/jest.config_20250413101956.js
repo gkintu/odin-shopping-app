@@ -1,7 +1,7 @@
 // jest.config.js (Example)
 export default {
   testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/src/setupTests.js'], // Optional setup file
+  setupFilesAfterEnv: ['<rootDir>/src/setupTests.js', '@testing-library/jest-dom/extend-expect'], // Optional setup file
   moduleNameMapper: {
     // Handle CSS imports
     '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
@@ -17,4 +17,6 @@ export default {
     '/node_modules/',
     '^.+\\.module\\.(css|sass|scss)$',
   ],
+  moduleFileExtensions: ['js', 'jsx', 'json', 'node'],
+  testPathIgnorePatterns: ['/node_modules/', '/.history/'],
 };

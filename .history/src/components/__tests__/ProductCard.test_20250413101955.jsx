@@ -1,6 +1,6 @@
 // src/components/__tests__/ProductCard.test.jsx
 import React from 'react';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'; // For simulating user interactions
 import ProductCard from '../ProductCard';
 
@@ -77,20 +77,24 @@ describe('ProductCard', () => {
   });
 
   it('updates quantity via input field', async () => {
+    const user = userEvent.setup();
     const mockAddToCart = jest.fn();
     render(<ProductCard product={mockProduct} onAddToCart={mockAddToCart} />);
 
     const quantityInput = screen.getByRole('spinbutton');
 
-    // Use fireEvent to change the value directly
-    fireEvent.change(quantityInput, { target: { value: '5' } });
+    await user.clear(quantityInput);
+    await user.type(quantityInput, '5');
+    await new Promise(resolve => setTimeout(resolve, 0));
     expect(quantityInput).toHaveValue(5);
 
-    // Test invalid input resets to 1
-    fireEvent.change(quantityInput, { target: { value: 'abc' } });
-    expect(quantityInput).toHaveValue(1);
+     // Test invalid input resets to 1 (or minimum allowed)
+    await user.clear(quantityInput);
+    await user.type(quantityInput, 'abc'); // Invalid input
+    expect(quantityInput).toHaveValue(1); // Should reset or handle invalid gracefully
 
-    fireEvent.change(quantityInput, { target: { value: '-2' } });
-    expect(quantityInput).toHaveValue(1);
+    await user.clear(quantityInput);
+    await user.type(quantityInput, '-2'); // Invalid input
+    expect(quantityInput).toHaveValue(1); // Should reset or handle invalid gracefully (based on handleQuantityChange logic)
   });
 });

@@ -12,12 +12,11 @@ function ProductCard({ product, onAddToCart }) {
       setQuantity(1);
       return;
     }
-    // Convert to number and validate
-    const value = Number(newValue);
-    if (!isNaN(value) && value >= 1) {
-      setQuantity(value);
-    } else {
+    const value = parseInt(newValue, 10);
+    if (isNaN(value) || value < 1) {
       setQuantity(1);
+    } else {
+      setQuantity(value);
     }
   };
 
